@@ -9,8 +9,6 @@ const NotesModel = require('./notesModel');
 describe('Notes view', () => {
   it('displays two notes', () => {
     document.body.innerHTML = fs.readFileSync('./index.html');
-
-    // 1. Arrange - instantiate our View class
     const myModel = new NotesModel();
     const myView = new NotesView(myModel);
     myModel.addNote('Sell the cow.');
@@ -18,7 +16,23 @@ describe('Notes view', () => {
 
     myView.displayNotes();
 
-    expect(document.querySelectorAll('div.note').length).toBe(2);
+    expect(document.querySelectorAll('#note').length).toBe(2);
+  
+  });
+
+
+  it('displays two notes on page', () => {
+    document.body.innerHTML = fs.readFileSync('./index.html');
+
+    const myModel = new NotesModel();
+    const myView = new NotesView(myModel);
+
+    const buttonEl = document.querySelector('#add-note-button');
+    const inputEl = document.querySelector('#new-note-input');
+    inputEl.value = 'Sell the cow.'
+    buttonEl.click();
+    myView.displayNotes();
+    expect(document.querySelector('#note').textContent).toEqual('Sell the cow.');
   
   });
 
