@@ -12,9 +12,14 @@ class NotesModel {
     this.array.push(note);
   }
 
+  setNotes(notes) { ////added yesterday////
+    this.array = notes; ////added yesterday////
+  }
+
   reset() {
     this.array = [];
   }
+  
 
 }
 
