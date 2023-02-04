@@ -42,9 +42,19 @@ async addNote() {
   const inputEl = document.querySelector('#new-note-input');
   await this.client.createNote(inputEl.value);
   inputEl.value = null;
-  this.displayNotesFromApi();
+  document.location.reload()
+  }
+
+  displayError() {
+    const newDivError = document.createElement('div');
+      newDivError.textContent = "Oops, something went wrong!";
+      newDivError.id = 'error';
+      this.mainContainerEl.append(newDivError);
 
   }
+
+
+
 }
 
 

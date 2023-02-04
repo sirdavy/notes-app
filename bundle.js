@@ -60,7 +60,13 @@
           const inputEl = document.querySelector("#new-note-input");
           await this.client.createNote(inputEl.value);
           inputEl.value = null;
-          this.displayNotesFromApi();
+          document.location.reload();
+        }
+        displayError() {
+          const newDivError = document.createElement("div");
+          newDivError.textContent = "Oops, something went wrong!";
+          newDivError.id = "error";
+          this.mainContainerEl.append(newDivError);
         }
       };
       module.exports = NotesView2;
@@ -70,10 +76,15 @@
   // notesClient.js
   var require_notesClient = __commonJS({
     "notesClient.js"(exports, module) {
+      var NotesView2 = require_notesView();
       var NotesClient2 = class {
         loadNotes(onNotesLoaded) {
           fetch("http://localhost:3000/notes").then((response) => response.json()).then((data) => {
             onNotesLoaded(data);
+          }).catch((error) => {
+            console.log(error);
+            const notesView = new NotesView2();
+            notesView.displayError();
           });
         }
         createNote(content) {
@@ -89,7 +100,8 @@
             return newNote2;
           }).catch((error) => {
             console.error("Error:", error);
-            throw error;
+            const notesView = new NotesView2();
+            notesView.displayError();
           });
         }
       };
@@ -104,5 +116,10 @@
   var client = new NotesClient();
   var model = new NotesModel();
   var view = new NotesView(model, client);
-  view.displayNotesFromApi();
+  client.loadNotes((notes) => {
+    model.setNotes(notes);
+    view.displayNotes();
+  }, () => {
+    view.displayError();
+  });
 })();
